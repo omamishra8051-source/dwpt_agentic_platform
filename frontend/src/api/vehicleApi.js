@@ -9,18 +9,23 @@ export const getVehicles = async () => {
   return response.data;
 };
 
+export const getVehicle = async (id) => {
+  const response = await API.get(`/vehicles/${id}`);
+  return response.data;
+};
+
 export const addVehicle = async (vehicle) => {
   const response = await API.post("/vehicles/", vehicle);
   return response.data;
 };
 
-export const deleteVehicle = async (id) => {
-  const response = await API.delete(`/vehicles/${id}`);
+export const updateVehicle = async (id, vehicle) => {
+  const response = await API.put(`/vehicles/${id}`, vehicle);
   return response.data;
 };
 
-export const updateVehicle = async (id, vehicle) => {
-  const response = await API.put(`/vehicles/${id}`, vehicle);
+export const deleteVehicle = async (id) => {
+  const response = await API.delete(`/vehicles/${id}`);
   return response.data;
 };
 
