@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
 from app.routers import vehicles
+from app.routers import highways
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +24,7 @@ app.add_middleware(
 )
 
 app.include_router(vehicles.router)
+app.include_router(highways.router)
 
 
 @app.get("/")

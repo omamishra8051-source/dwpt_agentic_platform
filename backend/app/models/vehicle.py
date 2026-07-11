@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -20,4 +21,13 @@ class Vehicle(Base):
 
     status = Column(String, default="Idle")
 
-    highway = Column(String, default="Not Assigned")
+    highway_id = Column(
+        Integer,
+        ForeignKey("highways.id"),
+        nullable=True,
+    )
+
+    highway = relationship(
+        "Highway",
+        back_populates="vehicles",
+    )
