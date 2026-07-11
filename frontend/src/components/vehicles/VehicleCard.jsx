@@ -1,4 +1,12 @@
-function VehicleCard({ vehicle, onEdit, onDelete }) {
+import { useState } from "react";
+
+import VehicleAssignForm from "./VehicleAssignForm";
+import VehicleRecommendationPanel from "./VehicleRecommendationPanel";
+
+function VehicleCard({ vehicle, onEdit, onDelete, onAssigned }) {
+  const [assigning, setAssigning] = useState(false);
+  const [recommending, setRecommending] = useState(false);
+
   const getSOCColor = (soc) => {
     if (soc >= 70) return "bg-green-500";
     if (soc >= 40) return "bg-yellow-500";
@@ -55,7 +63,16 @@ function VehicleCard({ vehicle, onEdit, onDelete }) {
           <span className="font-semibold">
             Highway:
           </span>{" "}
-          {vehicle.highway}
+          {vehicle.highway ? vehicle.highway.name : "Unassigned"}
+        </p>
+
+        <p>
+          <span className="font-semibold">
+            Station:
+          </span>{" "}
+          {vehicle.charging_station
+            ? vehicle.charging_station.name
+            : "Not connected"}
         </p>
 
         <p>
@@ -100,6 +117,20 @@ function VehicleCard({ vehicle, onEdit, onDelete }) {
         </button>
 
         <button
+          onClick={() => setAssigning(!assigning)}
+          className="flex-1 bg-cyan-700 hover:bg-cyan-600 py-2 rounded-lg transition"
+        >
+          {assigning ? "Close" : "Assign"}
+        </button>
+
+        <button
+          onClick={() => setRecommending(!recommending)}
+          className="flex-1 bg-purple-700 hover:bg-purple-600 py-2 rounded-lg transition"
+        >
+          {recommending ? "Close" : "AI"}
+        </button>
+
+        <button
           onClick={() => onDelete(vehicle.id)}
           className="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded-lg transition"
         >
@@ -107,6 +138,24 @@ function VehicleCard({ vehicle, onEdit, onDelete }) {
         </button>
 
       </div>
+
+      {assigning && (
+        <VehicleAssignForm
+          vehicleId={vehicle.id}
+          onDone={() => {
+            setAssigning(false);
+            onAssigned();
+          }}
+          onCancel={() => setAssigning(false)}
+        />
+      )}
+
+      {recommending && (
+        <VehicleRecommendationPanel
+          vehicleId={vehicle.id}
+          onClose={() => setRecommending(false)}
+        />
+      )}
 
     </div>
   );

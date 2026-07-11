@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app.routers import vehicles
 from app.routers import highways
+from app.routers import charging_stations
 
 Base.metadata.create_all(bind=engine)
 
@@ -25,6 +26,7 @@ app.add_middleware(
 
 app.include_router(vehicles.router)
 app.include_router(highways.router)
+app.include_router(charging_stations.router)
 
 
 @app.get("/")

@@ -47,3 +47,23 @@ def update(db: Session, vehicle_id: int, updated_vehicle):
     db.refresh(vehicle)
 
     return vehicle
+
+
+def assign(
+    db: Session,
+    vehicle_id: int,
+    highway_id: int,
+    charging_station_id: int,
+):
+    vehicle = get_by_id(db, vehicle_id)
+
+    if not vehicle:
+        return None
+
+    vehicle.highway_id = highway_id
+    vehicle.charging_station_id = charging_station_id
+
+    db.commit()
+    db.refresh(vehicle)
+
+    return vehicle

@@ -9,6 +9,11 @@ export const getVehicles = async () => {
   return response.data;
 };
 
+export const getVehicleStatuses = async () => {
+  const response = await API.get("/vehicles/status/all");
+  return response.data;
+};
+
 export const getVehicle = async (id) => {
   const response = await API.get(`/vehicles/${id}`);
   return response.data;
@@ -26,6 +31,18 @@ export const updateVehicle = async (id, vehicle) => {
 
 export const deleteVehicle = async (id) => {
   const response = await API.delete(`/vehicles/${id}`);
+  return response.data;
+};
+
+export const assignVehicle = async (id, assignment) => {
+  const response = await API.post(`/vehicles/${id}/assign`, assignment);
+  return response.data;
+};
+
+export const getRecommendation = async (id, targetSoc) => {
+  const response = await API.post(`/vehicles/${id}/recommendation`, {
+    target_soc: targetSoc,
+  });
   return response.data;
 };
 

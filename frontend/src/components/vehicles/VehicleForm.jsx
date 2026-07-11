@@ -10,6 +10,8 @@ function VehicleForm({
     model: "",
     battery_capacity: "",
     soc: 100,
+    position_km: 0,
+    target_soc: "",
   });
 
   useEffect(() => {
@@ -19,6 +21,8 @@ function VehicleForm({
         model: editingVehicle.model,
         battery_capacity: editingVehicle.battery_capacity,
         soc: editingVehicle.soc,
+        position_km: editingVehicle.position_km ?? 0,
+        target_soc: editingVehicle.target_soc ?? "",
       });
     } else {
       setFormData({
@@ -26,17 +30,23 @@ function VehicleForm({
         model: "",
         battery_capacity: "",
         soc: 100,
+        position_km: 0,
+        target_soc: "",
       });
     }
   }, [editingVehicle]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]:
-        e.target.name === "soc"
-          ? Number(e.target.value)
-          : e.target.value,
+      [name]:
+        ["soc", "position_km", "target_soc"].includes(name)
+          ? value === ""
+            ? ""
+            : Number(value)
+          : value,
     });
   };
 
@@ -52,7 +62,10 @@ function VehicleForm({
       return;
     }
 
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      target_soc: formData.target_soc === "" ? null : formData.target_soc,
+    });
 
     if (!editingVehicle) {
       setFormData({
@@ -60,6 +73,8 @@ function VehicleForm({
         model: "",
         battery_capacity: "",
         soc: 100,
+        position_km: 0,
+        target_soc: "",
       });
     }
   };
@@ -105,8 +120,29 @@ function VehicleForm({
           min="0"
           max="100"
           name="soc"
-          placeholder="SOC"
+          placeholder="Current SOC"
           value={formData.soc}
+          onChange={handleChange}
+        />
+
+        <input
+          className="bg-slate-700 rounded-lg p-3 outline-none"
+          type="number"
+          min="0"
+          name="position_km"
+          placeholder="Current Position (km)"
+          value={formData.position_km}
+          onChange={handleChange}
+        />
+
+        <input
+          className="bg-slate-700 rounded-lg p-3 outline-none"
+          type="number"
+          min="0"
+          max="100"
+          name="target_soc"
+          placeholder="Target SOC at next station (optional)"
+          value={formData.target_soc}
           onChange={handleChange}
         />
 

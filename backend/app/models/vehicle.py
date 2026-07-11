@@ -21,13 +21,27 @@ class Vehicle(Base):
 
     status = Column(String, default="Idle")
 
+    position_km = Column(Integer, nullable=False, default=0)
+
+    target_soc = Column(Integer, nullable=True)
+
     highway_id = Column(
         Integer,
         ForeignKey("highways.id"),
         nullable=True,
     )
 
+    charging_station_id = Column(
+        Integer,
+        ForeignKey("charging_stations.id"),
+        nullable=True,
+    )
+
     highway = relationship(
         "Highway",
         back_populates="vehicles",
+    )
+
+    charging_station = relationship(
+        "ChargingStation",
     )

@@ -6,8 +6,15 @@ from app.schemas.vehicle import (
     VehicleCreate,
     VehicleUpdate,
     VehicleResponse,
+    VehicleAssignment,
+    VehicleStatusResponse,
+)
+from app.schemas.recommendation import (
+    RecommendationRequest,
+    RecommendationResponse,
 )
 from app.services import vehicle_service
+from app.services import recommendation_service
 
 router = APIRouter(
     prefix="/vehicles",
@@ -17,6 +24,11 @@ router = APIRouter(
 
 @router.get("/", response_model=list[VehicleResponse])
 def get_vehicles(db: Session = Depends(get_db)):
+    return vehicle_service.get_all_vehicles(db)
+
+
+@router.get("/status/all", response_model=list[VehicleStatusResponse])
+def get_all_vehicle_statuses(db: Session = Depends(get_db)):
     return vehicle_service.get_all_vehicles(db)
 
 
@@ -84,3 +96,44 @@ def delete_vehicle(
     return {
         "message": "Vehicle deleted successfully"
     }
+
+
+@router.post("/{vehicle_id}/assign", response_model=VehicleResponse)
+def assign_vehicle(
+    vehicle_id: int,
+    assignment: VehicleAssignment,
+    db: Session = Depends(get_db),
+):
+    vehicle, error = vehicle_service.assign_vehicle(
+        db,
+        vehicle_id,
+        assignment.highway_id,
+        assignment.charging_station_id,
+    )
+
+    if error:
+        status_code = 404 if "not found" in error else 400
+        raise HTTPException(status_code=status_code, detail=error)
+
+    return vehicle
+
+
+@router.post(
+    "/{vehicle_id}/recommendation",
+    response_model=RecommendationResponse,
+)
+def get_recommendation(
+    vehicle_id: int,
+    request: RecommendationRequest,
+    db: Session = Depends(get_db),
+):
+    result, error = recommendation_service.calculate_recommendation(
+        db,
+        vehicle_id,
+        request.target_soc,
+    )
+
+    if error:
+        raise HTTPException(status_code=400, detail=error)
+
+    return result

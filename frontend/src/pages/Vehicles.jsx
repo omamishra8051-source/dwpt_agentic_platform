@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import {
-  getVehicles,
+  getVehicleStatuses,
   addVehicle,
   updateVehicle,
   deleteVehicle,
@@ -20,7 +20,7 @@ function Vehicles() {
     setLoading(true);
 
     try {
-      const data = await getVehicles();
+      const data = await getVehicleStatuses();
       setVehicles(data);
     } catch (err) {
       console.error(err);
@@ -118,6 +118,7 @@ function Vehicles() {
               vehicle={vehicle}
               onEdit={setEditingVehicle}
               onDelete={handleDelete}
+              onAssigned={loadVehicles}
             />
 
           ))}

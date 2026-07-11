@@ -5,6 +5,8 @@ const links = [
   { name: "Vehicles", path: "/vehicles", icon: "🚗" },
   { name: "Highways", path: "/highways", icon: "🛣️" },
   { name: "Charging", path: "/charging", icon: "⚡" },
+  { name: "Live Status", path: "/status", icon: "📡" },
+  { name: "Track Map", path: "/track", icon: "🗺️" },
   { name: "AI Agents", path: "/agents", icon: "🤖" },
   { name: "Analytics", path: "/analytics", icon: "📊" },
   { name: "Settings", path: "/settings", icon: "⚙️" },
